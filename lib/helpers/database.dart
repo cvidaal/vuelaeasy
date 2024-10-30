@@ -3,7 +3,7 @@ import 'package:mysql1/mysql1.dart';
 
 class Database{
 
-  final String _host = 'localhost';
+  final String _host = '10.0.2.2';
   final int _port = 3306;
   final String _user = 'root';
 
@@ -49,12 +49,12 @@ class Database{
     destino VARCHAR(50) NOT NULL,
     fecha DATE NOT NULL,
     hora_salida TIME NOT NULL,
-    hora_llegada TIME NOT NULL,
+    hora_llegada TIME NOT NULL, 
     modelo_avion VARCHAR(50) NOT NULL,
     total_asientos INT NOT NULL);
     ''');
   }
-
+                  //CARLOS ESTO ESTA MAL REVISALO
   _crearTablaPasajeros(conn) async{
     await conn.query('''CREATE TABLE IF NOT EXISTS pasajeros (
     idpasajero INT PRIMARY KEY,
