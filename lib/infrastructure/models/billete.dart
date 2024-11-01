@@ -1,5 +1,5 @@
 
-class Billetes {
+class Billete {
   int? idbillete;
   int? idvuelo;
   int? idpasajero;
@@ -8,7 +8,7 @@ class Billetes {
   String? formaPago;
   double? precio;
 
-  Billetes({
+  Billete({
     this.idbillete, 
     this.idpasajero,
     this.idvuelo,
@@ -18,7 +18,7 @@ class Billetes {
     this.precio
     });
 
-  Billetes.fromJson(Map<String, dynamic> json){
+  Billete.fromJson(Map<String, dynamic> json){
     idbillete = json['idbillete'];
     idvuelo = json['idvuelo'];
     idpasajero = json['idpasajero'];	

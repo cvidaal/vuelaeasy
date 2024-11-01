@@ -3,7 +3,7 @@ import 'package:mysql1/mysql1.dart';
 
 class Database{
 
-  final String _host = '10.0.2.2';
+  final String _host = 'localhost';
   final int _port = 3306;
   final String _user = 'root';
 
@@ -22,6 +22,7 @@ class Database{
       await _crearTablaPasajeros(conn);
       await _crearTablaBilletes(conn);
     } catch(e){
+      print('Error al instalar la base de datos: $e');
       await conn.close();
     }
   }
@@ -41,13 +42,14 @@ class Database{
     await conn.query('USE vuelaeasy');
   } 
 
+  //TODO: PROBLEMA CON LAS FECHAS
   _crearTablaVuelos(conn) async{
     await conn.query('''CREATE TABLE IF NOT EXISTS vuelos(
     idvuelo INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     num_vuelo INT NOT NULL,
     origen VARCHAR(50) NOT NULL,
     destino VARCHAR(50) NOT NULL,
-    fecha DATE NOT NULL,
+    fecha VARCHAR(20) NOT NULL,
     hora_salida TIME NOT NULL,
     hora_llegada TIME NOT NULL, 
     modelo_avion VARCHAR(50) NOT NULL,
@@ -61,7 +63,7 @@ class Database{
     nombre VARCHAR(50) NOT NULL,
     apellidos VARCHAR(50) NOT NULL,
     dni VARCHAR(15) UNIQUE NOT NULL,
-    tlf VARCHAR(15),
+    telefono VARCHAR(9),
     direccion VARCHAR(100)
     );
     ''');
