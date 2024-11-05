@@ -1,5 +1,6 @@
 
 class Billete {
+  
   int? idbillete;
   int? idvuelo;
   int? idpasajero;

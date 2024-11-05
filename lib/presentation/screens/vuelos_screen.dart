@@ -35,51 +35,62 @@ class _VuelosScreenState extends State<VuelosScreen> {
         title: const Text('VuelaEasy - Vuelos'),
       ),
       body: vuelos.isEmpty // Verifica si la lista de vuelos está vacía
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: Text('No hay vuelos disponibles!'))
           : ListView.builder(
-              itemCount: vuelos.length,
-              itemBuilder: (context, index) {
-                final vuelo = vuelos[index];
-                return ListTile(
-                  title: Text('Vuelo ${vuelo.idvuelo}'),
-                  subtitle: Text('Origen: ${vuelo.origen} - Destino: ${vuelo.destino}'),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        onPressed: () async {
-                          await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AgregarVueloScreen(vuelo: vuelo, vuelosCrud: widget.vuelosCrud),
-                            ),
-                          );
-                          _cargarVuelos(); // Actualiza la lista después de editar
-                        },
-                        icon: const Icon(Icons.edit),
-                        color: Colors.blue,
+                itemCount: vuelos.length,
+                itemBuilder: (context, index) {
+                  final vuelo = vuelos[index];
+                  return Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Container(
+                        height: 150,
+                        color: Colors.black87,
+                        child: ListTile(
+                          title: Text('Vuelo de ${vuelo.origen} a ${vuelo.destino}', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Colors.white),),
+                          subtitle: Text('Fecha: ${vuelo.fecha}\nHora salida: ${vuelo.horaSalida}\nAsientos: ${vuelo.totalAsientos}', style: const TextStyle(color: Colors.white),),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                onPressed: () async {
+                                  await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => AgregarVueloScreen(vuelo: vuelo, vuelosCrud: widget.vuelosCrud),
+                                    ),
+                                  );
+                                  _cargarVuelos(); // Actualiza la lista después de editar
+                                },
+                                icon: const Icon(Icons.edit),
+                                color: Colors.blue,
+                              ),
+                              IconButton(
+                                onPressed: () async {
+                                  await widget.vuelosCrud.eliminarVuelo(vuelo);
+                                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Vuelo eliminado')));
+                                  _cargarVuelos(); // Actualiza la lista después de eliminar
+                                },
+                                icon: const Icon(Icons.delete_forever_rounded),
+                                color: Colors.redAccent,
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                      IconButton(
-                        onPressed: () async {
-                          await widget.vuelosCrud.eliminarVuelo(vuelo);
-                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Vuelo eliminado')));
-                          _cargarVuelos(); // Actualiza la lista después de eliminar
-                        },
-                        icon: const Icon(Icons.delete_forever_rounded),
-                        color: Colors.red,
-                      ),
-                    ],
-                  ),
-                );
+                    ),
+                  );
+                },
+              ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () async {
+                await Navigator.push(context, MaterialPageRoute(builder: (context) => AgregarVueloScreen(vuelosCrud: widget.vuelosCrud)));
+                _cargarVuelos(); // Actualiza la lista después de agregar
               },
+              child: const Icon(Icons.add),
             ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          await Navigator.push(context, MaterialPageRoute(builder: (context) => AgregarVueloScreen(vuelosCrud: widget.vuelosCrud)));
-          _cargarVuelos(); // Actualiza la lista después de agregar
-        },
-        child: const Icon(Icons.add),
-      ),
-    );
+           
+          );
   }
 }
