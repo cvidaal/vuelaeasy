@@ -40,14 +40,14 @@ class VuelosCrud {
   }
 
   //Obtener vuelos por id
-  Future<Vuelo?> obtenerVueloID(int idvuelo) async{
+  Future<Vuelo?> obtenerVueloID(String destino) async{
     try{
       var result = await conn.query('''
-      SELECT * FROM vuelos WHERE idvuelo = ?
-      ''', [idvuelo]);
+      SELECT * FROM vuelos WHERE destino = ?
+      ''', [destino]);
       return Vuelo.fromJson(result.first.fields);
     } catch(e){
-      print('Error al obtener vuelo por id: $e');
+      print('Error al obtener vuelo por destino: $e');
     }
     return null;
   }

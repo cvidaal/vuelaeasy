@@ -56,7 +56,7 @@ class Database{
     total_asientos INT NOT NULL);
     ''');
   }
-                  //CARLOS ESTO ESTA MAL REVISALO
+  
   _crearTablaPasajeros(conn) async{
     await conn.query('''CREATE TABLE IF NOT EXISTS pasajeros (
     idpasajero INT PRIMARY KEY,
