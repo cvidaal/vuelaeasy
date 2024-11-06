@@ -69,7 +69,7 @@ class _InfoVueloScreenState extends State<InfoVueloScreen> {
                         MySqlConnection conn = await Database().conexion(); // Conexión a la base de datos
 
                         Navigator.push(context, MaterialPageRoute(builder: (context) => ComprarBilleteScreen(
-                          vuelo: widget.vuelo,
+                          vuelo: widget.vuelo, // Incluye el vuelo en la instancia
                           pasajerosCrud: PasajerosCrud(conn),
                           billetesCrud: BilletesCrud(conn),
                         )));

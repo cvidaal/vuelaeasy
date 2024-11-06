@@ -59,7 +59,7 @@ class Database{
   
   _crearTablaPasajeros(conn) async{
     await conn.query('''CREATE TABLE IF NOT EXISTS pasajeros (
-    idpasajero INT PRIMARY KEY,
+    idpasajero INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL,
     apellidos VARCHAR(50) NOT NULL,
     dni VARCHAR(15) UNIQUE NOT NULL,

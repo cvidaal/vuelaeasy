@@ -8,9 +8,9 @@ class PasajerosCrud {
 
   PasajerosCrud(this.conn);
 
-  Future<void> crearPasajero(Pasajero pasajero) async{
+  Future<int?> crearPasajero(Pasajero pasajero) async{
     try{
-      await conn.query('''
+      var result = await conn.query('''
       INSERT INTO pasajeros (nombre, apellidos, dni, telefono, direccion )
       VALUES (?, ?, ?, ?, ?)
       ''',
@@ -19,9 +19,11 @@ class PasajerosCrud {
       pasajero.dni,
       pasajero.telefono,
       pasajero.direccion]);
+
+      return result.insertId; // Devuelve el id generado para utilizarlo en Comprar Billetes
     } catch(e){
       print(e);
-    }
+    } 
   }
 
   Future<List<Pasajero>> obtenerPasajeros() async{
