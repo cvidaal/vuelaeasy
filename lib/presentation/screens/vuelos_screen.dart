@@ -13,7 +13,6 @@ class VuelosScreen extends StatefulWidget {
 }
 
 class _VuelosScreenState extends State<VuelosScreen> {
-  int _selectedIndex = 0; // Para navegar de una pantalla a otra
   List vuelos = [];
 
   @override
@@ -29,126 +28,133 @@ class _VuelosScreenState extends State<VuelosScreen> {
     });
   }
 
-  // Lista de pantallas, cada índice corresponde a una pestaña del BottomNavigationBar
-  List<Widget> get _screens => [
-        _buildVuelosList(), // La lista de vuelos
-        const Center(child: Text('Billetes')), // Una pantalla de ejemplo
-        const Center(child: Text('Perfil')), // Otra pantalla de ejemplo
-      ];
-
-  // Construye la lista de vuelos como un widget separado
-  Widget _buildVuelosList() {
-    return vuelos.isEmpty
-        ? const Center(child: Text('No hay vuelos disponibles!'))
-        : ListView.builder(
-            itemCount: vuelos.length,
-            itemBuilder: (context, index) {
-              final vuelo = vuelos[index];
-              return Padding(
-                padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
-                child: GestureDetector(
-                  onTap: () async {
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => InfoVueloScreen(vuelo: vuelo),
-                      ),
-                    );
-                  },
-                  child: Card(
-                    color: Colors.blue[100],
-                    child: ListTile(
-                      title: Text(
-                        'Vuelo de ${vuelo.origen} a ${vuelo.destino}',
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 8),
-                          Row(
-                            children: [
-                              const Text('Fecha: ',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w800, fontSize: 17)),
-                              Text(vuelo.fecha),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              const Text('Hora salida: ',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w800, fontSize: 17)),
-                              Text(vuelo.horaSalida),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              const Text('Asientos: ',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w800, fontSize: 17)),
-                              Text(vuelo.totalAsientos.toString()),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              );
-            },
-          );
-  }
-
-  void _cambiarItem(int index) {
-    setState(() {
-      _selectedIndex = index; // Actualiza el índice para cambiar de pantalla
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('VuelaEasy - Vuelos'),
       ),
-      body: _screens[_selectedIndex], // Muestra la pantalla según el índice
-      floatingActionButton: _selectedIndex == 0 // Solo en la primera pantalla
-          ? FloatingActionButton(
-              onPressed: () async {
-                await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        AgregarVueloScreen(vuelosCrud: widget.vuelosCrud),
+      body: vuelos.isEmpty
+          ? const Center(child: Text('No hay vuelos disponibles!', style: TextStyle(fontSize: 18)))
+          : ListView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              itemCount: vuelos.length,
+              itemBuilder: (context, index) {
+                final vuelo = vuelos[index];
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 6),
+                  child: GestureDetector(
+                    onTap: () async {
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => InfoVueloScreen(vuelo: vuelo),
+                        ),
+                      );
+                    },
+                    child: Card(
+                      color: Colors.white,
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Vuelo de ${vuelo.origen} a ${vuelo.destino}',
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black87,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            _infoRow('Fecha', vuelo.fecha),
+                            const SizedBox(height: 6),
+                            _infoRow('Hora salida', vuelo.horaSalida),
+                            const SizedBox(height: 6),
+                            _infoRow('Hora llegada', vuelo.horaLlegada),
+                            const SizedBox(height: 6),
+                            _infoRow('Asientos', vuelo.totalAsientos.toString()),
+                            const SizedBox(height: 12),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                IconButton(
+                                  onPressed: () async {
+                                    await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => AgregarVueloScreen(
+                                            vuelo: vuelo,
+                                            vuelosCrud: widget.vuelosCrud),
+                                      ),
+                                    );
+                                    _cargarVuelos();
+                                  },
+                                  icon: const Icon(Icons.edit),
+                                  color: Colors.blueAccent,
+                                ),
+                                IconButton(
+                                  onPressed: () async {
+                                    await widget.vuelosCrud.eliminarVuelo(vuelo);
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                            content: Text('Vuelo eliminado')));
+                                    _cargarVuelos();
+                                  },
+                                  icon: const Icon(Icons.delete_forever_rounded),
+                                  color: Colors.redAccent,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
                 );
-                _cargarVuelos(); // Actualiza después de agregar un vuelo
               },
-              child: const Icon(Icons.add),
-            )
-          : null,
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.flight),
-            label: 'Vuelos',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.airplane_ticket),
-            label: 'Billetes',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Perfil',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        onTap: _cambiarItem,
+            ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          await Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      AgregarVueloScreen(vuelosCrud: widget.vuelosCrud)));
+          _cargarVuelos();
+        },
+        child: const Icon(Icons.add),
+        backgroundColor: Colors.blueAccent,
       ),
+    );
+  }
+
+  Widget _infoRow(String label, String value) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label + ':',
+          style: const TextStyle(
+            fontWeight: FontWeight.w600,
+            color: Colors.black54,
+            fontSize: 16,
+          ),
+        ),
+        Text(
+          value,
+          style: const TextStyle(
+            fontWeight: FontWeight.w400,
+            color: Colors.black87,
+            fontSize: 16,
+          ),
+        ),
+      ],
     );
   }
 }

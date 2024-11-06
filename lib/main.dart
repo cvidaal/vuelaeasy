@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:vuelaeasy/config/helpers/database/database.dart';
 import 'package:vuelaeasy/config/helpers/database/vuelos_crud.dart';
 import 'package:vuelaeasy/config/theme/app_theme.dart';
-import 'package:vuelaeasy/presentation/screens/login_screen.dart';
 import 'package:vuelaeasy/presentation/screens/vuelos_screen.dart';
 
 void main() async{

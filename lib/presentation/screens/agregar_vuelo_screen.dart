@@ -64,6 +64,7 @@ class _AgregarVueloScreenState extends State<AgregarVueloScreen> {
       appBar: AppBar(
         title: Text(widget.vuelo == null ? 'Agregar vuelo' : 'Editar vuelo'), // Cambia el título si se recibe un vuelo
       ),
+      
       body: Padding(
         padding: const EdgeInsets.all(8),
         child: Form(
@@ -116,7 +117,7 @@ class _AgregarVueloScreenState extends State<AgregarVueloScreen> {
                 initialValue: totalAsientos.toString(),
                 decoration: const InputDecoration(labelText: 'Total de asientos'),
                 validator: (value) => value!.isEmpty ? 'Ingresa el total de asientos' : null,
-                onChanged: (value) => totalAsientos = int.parse(value) ?? 0,
+                onChanged: (value) => totalAsientos = int.parse(value) ?? 40,
               ),
               ElevatedButton(
                 onPressed: () async{
