@@ -3,7 +3,7 @@ import 'package:mysql1/mysql1.dart';
 
 class Database{
 
-  final String _host = 'localhost';
+  final String _host = '10.0.2.2';
   final int _port = 3306;
   final String _user = 'root';
 

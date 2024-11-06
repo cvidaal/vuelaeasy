@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:vuelaeasy/config/helpers/database/billetes_crud.dart';
 import 'package:vuelaeasy/config/helpers/database/pasajeros_crud.dart';
@@ -10,7 +12,7 @@ class ComprarBilleteScreen extends StatefulWidget {
   final BilletesCrud billetesCrud;
   final Vuelo? vuelo; // Instancia de billetesCrud
 
-  const ComprarBilleteScreen(
+  ComprarBilleteScreen(
       {super.key,
       required this.pasajerosCrud,
       required this.billetesCrud,
@@ -22,7 +24,8 @@ class ComprarBilleteScreen extends StatefulWidget {
 
 class _ComprarBilleteScreenState extends State<ComprarBilleteScreen> {
   final _formKey = GlobalKey<FormState>(); // Llave para el formulario
-
+  final List<String> opcionesClase = ['Turista', 'Ejecutiva', 'Primera clase'];
+  final List<String> opcionesPago = ['Tarjeta', 'Efectivo', 'Paypal'];
   // Campos del formulario Pasajeros
   String nombre = '';
   String apellidos = '';
@@ -32,9 +35,10 @@ class _ComprarBilleteScreenState extends State<ComprarBilleteScreen> {
 
   // Campos del formulario Billetes
   //TODO: Falta fecha compra
-  String claseServicio = '';
-  String formaPago = '';
-  double precio = 0.0;
+  String claseServicio = 'Turista';
+  String formaPago = 'Efectivo';
+  double precio = double.parse((Random().nextDouble() * 1000).toStringAsFixed(2));
+  
 
   @override
   Widget build(BuildContext context) {
@@ -87,20 +91,36 @@ class _ComprarBilleteScreenState extends State<ComprarBilleteScreen> {
                     value!.isEmpty ? 'Ingresa la dirección' : null,
                 onChanged: (value) => direccion = value,
               ),
-              TextFormField(
-                initialValue: claseServicio,
+              DropdownButtonFormField<String>( // Desplegable
+                value: claseServicio,
                 decoration: const InputDecoration(labelText: 'Clase'),
-                validator: (value) =>
-                    value!.isEmpty ? 'Ingresa la clase de servicio' : null,
-                onChanged: (value) => claseServicio = value,
-              ),
-              TextFormField(
-                initialValue: formaPago,
-                decoration: const InputDecoration(labelText: 'Forma de pago'),
-                validator: (value) =>
-                    value!.isEmpty ? 'Ingresa la forma de pago' : null,
-                onChanged: (value) => formaPago = value,
-              ),
+                items: opcionesClase.map((String opcion){
+                  return DropdownMenuItem(
+                    value: opcion,
+                    child: Text(opcion),
+                  );
+                },).toList(),
+                onChanged: (value){
+                  setState(() {
+                    claseServicio = value!;
+                  });
+                }
+                ),
+              DropdownButtonFormField<String>(
+                value: formaPago,
+                decoration: const InputDecoration(labelText: 'Forma de pago: '),
+                items: opcionesPago.map((String opcion){
+                  return DropdownMenuItem(
+                    value: opcion,
+                    child: Text(opcion),
+                  );
+                },).toList(), 
+                onChanged: (value){
+                  setState(() {
+                    formaPago = value!; // Forma de pag es igual a la opción seleccionada.
+                  });
+                }
+                ),
               TextFormField(
                 initialValue: precio.toString(),
                 decoration: const InputDecoration(labelText: 'Precio'),
