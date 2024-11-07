@@ -83,4 +83,14 @@ class VuelosCrud {
       print('Error al eliminar vuelo: $e');
   }
   }
+
+  Future<void> restarAsientos(int idVuelo) async{
+    try{
+      await conn.query('''
+        UPDATE vuelos SET total_asientos = total_asientos - 1 WHERE idvuelo = ? AND total_asientos > 0
+      ''', [idVuelo]);
+    } catch(e){
+      print('Error al restar asientos: $e');
+    }
+  }
 }

@@ -36,11 +36,13 @@ class PasajerosCrud {
     }
   }
 
-  Future<Pasajero?> obtenerPasajeroID(int idpasajero) async{
+  Future<int?> obtenerPasajeroDNI(String dni) async{
     try{
-      await conn.query('''
-      SELECT * FROM pasajeros WHERE idpasajero = ?
-      ''', [idpasajero]);
+      var resultado = await conn.query('''
+      SELECT * FROM pasajeros WHERE dni = ?
+      ''', [dni]);
+
+      return resultado.first[0] as int;
     } catch(e){
       print('Error al obtener pasajero por id: $e');
     }

@@ -117,7 +117,7 @@ class _AgregarVueloScreenState extends State<AgregarVueloScreen> {
                 initialValue: totalAsientos.toString(),
                 decoration: const InputDecoration(labelText: 'Total de asientos'),
                 validator: (value) => value!.isEmpty ? 'Ingresa el total de asientos' : null,
-                onChanged: (value) => totalAsientos = int.parse(value) ?? 40,
+                onChanged: (value) => totalAsientos = int.parse(value) ?? 0,
               ),
               ElevatedButton(
                 onPressed: () async{

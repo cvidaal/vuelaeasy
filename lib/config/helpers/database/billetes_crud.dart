@@ -1,4 +1,5 @@
 import 'package:mysql1/mysql1.dart';
+import 'package:vuelaeasy/config/helpers/database/vuelos_crud.dart';
 import 'package:vuelaeasy/infrastructure/models/billete.dart';
 
 class BilletesCrud {
@@ -19,6 +20,11 @@ class BilletesCrud {
     billete.formaPago,
     billete.precio]
     );
+
+    // Llamo al método de la clase Vueloscrud para actualizar el número de asientos
+    final vuelosCrud = VuelosCrud(conn);
+    await vuelosCrud.restarAsientos(billete.idvuelo!);
+    
     } catch(e){
       print('Error al crear billete: $e');
     }
@@ -68,6 +74,13 @@ class BilletesCrud {
       print('Error al obtener billete por id: $e');
     }
     return null;
+  }
+
+  Future<bool> existeBilletePasajero(int idPasajero, int idVuelo) async{
+    var resultado = await conn.query('''
+      SELECT 1 FROM billetes WHERE idpasajero = ? AND idvuelo = ?
+    ''', [idPasajero, idVuelo]);
+    return resultado.isNotEmpty; //Retorna true si hay al menos un billete
   }
 
   Future<void> actualizarBillete(Billete billete) async{

@@ -135,7 +135,12 @@ class _ComprarBilleteScreenState extends State<ComprarBilleteScreen> {
                 onPressed: () {
                   _guardarBillete(context);
                   ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Billete comprado')));
+                      const SnackBar(
+                        content: Text('Billete comprado'),
+                        backgroundColor: Colors.green,
+                        duration: Duration(seconds: 2),
+                      )
+                      );
                 },
                 child: Text('Comprar billete'),
               ),
@@ -149,23 +154,49 @@ class _ComprarBilleteScreenState extends State<ComprarBilleteScreen> {
   // Función para guardar billete y pasajero
   Future<void> _guardarBillete(BuildContext context) async {
     if (_formKey.currentState?.validate() ?? false) {
-      // Crear un nuevo pasajero
-      final pasajero = Pasajero(
-        nombre: nombre,
-        apellidos: apellidos,
-        dni: dni,
-        telefono: telefono,
-        direccion: direccion,
-      );
+      int? idExistente = await widget.pasajerosCrud.obtenerPasajeroDNI(dni);
+      int? idPasajero;
 
-      // Guardar el pasajero en la base de datos
-      final idPasajeroGenerado =
+      // Si el pasajero existe, usamos su id
+      if(idExistente != null){
+        idPasajero = idExistente;
+      } else{
+        // Crea un nuevo pasajero
+        final pasajero = Pasajero(
+          nombre: nombre,
+          apellidos: apellidos,
+          dni: dni,
+          telefono: telefono,
+          direccion: direccion,
+        );
+        // Guardar el pasajero en la base de datos
+      idPasajero =
           await widget.pasajerosCrud.crearPasajero(pasajero);
+      }
+    if(idPasajero != null && widget.vuelo != null){
+      if(await widget.billetesCrud.existeBilletePasajero(idPasajero!, widget.vuelo!.idvuelo as int)){
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Ya tienes un billete para este vuelo'),
+            backgroundColor: Colors.red,
+            )
+        );
+        return; // Salir de la función
+      }
+    } else{
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Error al obtener el pasajero o vuelo'),
+          backgroundColor: Colors.red,
+          ),
+      );
+      return; // Salir de la función
+    }
 
       // Crear el billete
       final billete = Billete(
         idvuelo: widget.vuelo?.idvuelo, // Usamos el id del vuelo guardado
-        idpasajero: idPasajeroGenerado, // Usamos el id del pasajero generado
+        idpasajero: idPasajero, // Usamos el id del pasajero generado
         fechaCompra: DateTime.now(),
         claseServicio: claseServicio,
         formaPago: formaPago,
@@ -178,4 +209,3 @@ class _ComprarBilleteScreenState extends State<ComprarBilleteScreen> {
   }
 }
 
-// Función para guardar el billete y pasajero
