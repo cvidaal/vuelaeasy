@@ -50,6 +50,28 @@ class Vuelo {
     data['total_asientos'] = totalAsientos;
     return data;
   }
+
+    Vuelo copyWith({
+    int? idvuelo,
+    int? numVuelo,
+    String? origen,
+    String? destino,
+    String? fecha,
+    String? horaSalida,
+    String? horaLlegada,
+    int? totalAsientos,
+  }) {
+    return Vuelo(
+      idvuelo: idvuelo ?? this.idvuelo,
+      numVuelo: numVuelo ?? this.numVuelo,
+      origen: origen ?? this.origen,
+      destino: destino ?? this.destino,
+      fecha: fecha ?? this.fecha,
+      horaSalida: horaSalida ?? this.horaSalida,
+      horaLlegada: horaLlegada ?? this.horaLlegada,
+      totalAsientos: totalAsientos ?? this.totalAsientos,
+    );
+  }
 }
 
 

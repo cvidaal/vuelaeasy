@@ -41,6 +41,7 @@ class _VuelosScreenState extends State<VuelosScreen> {
               itemCount: vuelos.length,
               itemBuilder: (context, index) {
                 final vuelo = vuelos[index];
+                final asientosMensaje = vuelo.totalAsientos == 0 ? 'No hay asientos disponibles' : '${vuelo.totalAsientos}';
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 6),
                   child: GestureDetector(

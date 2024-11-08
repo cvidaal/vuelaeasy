@@ -3,9 +3,11 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:vuelaeasy/config/helpers/database/billetes_crud.dart';
 import 'package:vuelaeasy/config/helpers/database/pasajeros_crud.dart';
+import 'package:vuelaeasy/config/helpers/database/vuelos_crud.dart';
 import 'package:vuelaeasy/infrastructure/models/billete.dart';
 import 'package:vuelaeasy/infrastructure/models/pasajero.dart';
 import 'package:vuelaeasy/infrastructure/models/vuelo.dart';
+import 'package:vuelaeasy/presentation/screens/vuelos_screen.dart';
 
 class ComprarBilleteScreen extends StatefulWidget {
   final PasajerosCrud pasajerosCrud; // Instancia de PasajerosCrud
@@ -38,7 +40,7 @@ class _ComprarBilleteScreenState extends State<ComprarBilleteScreen> {
   String claseServicio = 'Turista';
   String formaPago = 'Efectivo';
   double precio = double.parse((Random().nextDouble() * 1000).toStringAsFixed(2));
-  
+  late final VuelosCrud vuelosCrud;
 
   @override
   Widget build(BuildContext context) {
@@ -141,6 +143,7 @@ class _ComprarBilleteScreenState extends State<ComprarBilleteScreen> {
                         duration: Duration(seconds: 2),
                       )
                       );
+                
                 },
                 child: Text('Comprar billete'),
               ),

@@ -93,4 +93,12 @@ class VuelosCrud {
       print('Error al restar asientos: $e');
     }
   }
+
+  Future<int> asientosDisponibles(int idvuelo) async{
+    final resultado = await conn.query('''
+      SELECT total_asientos FROM vuelos WHERE idvuelo = ?'
+    ''', [idvuelo]);
+
+    return resultado.isNotEmpty ? resultado.first[0] as int : 0;
+  }
 }

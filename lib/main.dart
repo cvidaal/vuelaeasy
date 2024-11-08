@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vuelaeasy/config/helpers/database/database.dart';
 import 'package:vuelaeasy/config/helpers/database/vuelos_crud.dart';
 import 'package:vuelaeasy/config/theme/app_theme.dart';
@@ -11,7 +12,7 @@ void main() async{
   final conn = await Database().conexion();
   final vuelosCrud = VuelosCrud(conn);
 
-  runApp(MainApp(vuelosCrud: vuelosCrud,));
+  runApp(ProviderScope(child: MainApp(vuelosCrud: vuelosCrud,)));
 }
 
 class MainApp extends StatelessWidget {

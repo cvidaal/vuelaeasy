@@ -60,8 +60,10 @@ class _InfoVueloScreenState extends State<InfoVueloScreen> {
                       widget.vuelo.horaLlegada.toString()),
                   _buildDetailTile(Icons.airplanemode_active, 'Modelo de Avión',
                       widget.vuelo.modeloAvion.toString()),
-                  _buildDetailTile(Icons.event_seat, 'Asientos disponibles',
-                      widget.vuelo.totalAsientos.toString()),
+                  _buildDetailTile(
+                    Icons.event_seat, 
+                    'Asientos disponibles',
+                    widget.vuelo.totalAsientos.toString()),
         
                   const SizedBox(height: 10,),
                   FilledButton(
